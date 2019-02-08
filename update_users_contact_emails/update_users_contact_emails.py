@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # Just need the API Token from the Account Owner to run
 
 import requests
@@ -5,7 +6,11 @@ import json
 
 # Definitions
 api_token = 'xxx'
-header = {'Accept':'application/vnd.pagerduty+json;version=2', 'Content-Type': 'application/json', 'Authorization':'Token token=' + api_token}
+header =    {
+                'Accept':'application/vnd.pagerduty+json;version=2',
+                'Content-Type': 'application/json', 
+                'Authorization':'Token token=' + api_token 
+            }
 url = 'https://api.pagerduty.com/users'
 
 # Get the list of users from PD with their contact emails
