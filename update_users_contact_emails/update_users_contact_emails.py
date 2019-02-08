@@ -20,6 +20,9 @@ header =    {
 limit = 100
 offset = 0
 
+# maintain a count
+total_scanned,total_updates = 0, 0
+
 while True:
     params = {'include[]': 'contact_methods', 'limit': limit, 'offset': offset}
 
@@ -28,9 +31,6 @@ while True:
 
     # Convert the result to JSON
     users_list = json.loads(response.text)
-
-    # maintain a count
-    total_scanned,total_updates = 0, 0
 
     for user in users_list['users']:
         # working example: print(users_list['users'][0]['contact_methods'][0]['address'])
@@ -84,4 +84,4 @@ while True:
         break
 
 # print stats on cli
-print('Total contact methods scanned: {}\nTotal contact methods changed: {}\nTotal pages fetched: {}'.format(str(total_scanned),str(total_updates),str(offset//limit)))
+print('Total contact methods scanned: {}\nTotal contact methods changed: {}\nTotal pages fetched: {}'.format(str(total_scanned),str(total_updates),str((offset//limit)+1)))
