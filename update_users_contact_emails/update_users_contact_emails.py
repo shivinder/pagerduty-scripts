@@ -29,14 +29,19 @@ for user in users_list['users']:
     # this loop handles multiple contact emails, if any, for one user
     for contact_method in user['contact_methods']:
         if contact_method['type'] == 'email_contact_method':
-            # update count
-            total_updates+=1
-            
             # fetch the required values
             current_contact_method_id = contact_method['id']
             current_contact_method_label = contact_method['label']
             current_contact_method_email = contact_method['address']
             print("[" + uid + "] [" + str(current_contact_method_id) + "] " + str(current_contact_method_email))
+
+            # condition to check if .invalid is already there in the email
+            if current_contact_method_email[-8:] == '.invalid':
+                print('SKIPPED - ' + current_contact_method_email + '\n')
+                continue
+            
+            # update count
+            total_updates+=1
 
             # form the new payload for the api request to change the current contact email to the new one
             payload = {
@@ -53,7 +58,7 @@ for user in users_list['users']:
             # fire the request
             response = requests.put(update_url, headers=header, data=str(payload))
 
-            if response.status_code is 200:
+            if response.status_code == 200:
                 print('SUCCESS - ' + current_contact_method_email + '.invalid')
             else:   
                 print('FAILED - ' + current_contact_method_email + ' - ' + response.text)
