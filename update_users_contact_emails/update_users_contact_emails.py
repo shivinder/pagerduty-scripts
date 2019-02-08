@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-# Just need the API Token from the Account Owner to run
+# REST API Guide: https://api-reference.pagerduty.com
+# Just needs the API Token from the Account Owner to run
 # TODO: exception handling when no/invalid api_token is passed
 #       minor tweaks :)
 
@@ -16,7 +17,7 @@ header =    {
             }
 
 ## added pagination support
-# switch to max result limit
+# switch to max result limit (as specified on PD documentation website)
 limit = 100
 offset = 0
 
@@ -26,11 +27,8 @@ total_scanned,total_updates = 0, 0
 while True:
     params = {'include[]': 'contact_methods', 'limit': limit, 'offset': offset}
 
-    # Get the list of users from PD with their contact emails
-    response = requests.get(url, params=params, headers=header)
-
-    # Convert the result to JSON
-    users_list = json.loads(response.text)
+    # Get the list of users from PD with their contact emails and convert it to JSON
+    users_list = json.loads(requests.get(url, params=params, headers=header).text)
 
     for user in users_list['users']:
         # working example: print(users_list['users'][0]['contact_methods'][0]['address'])
