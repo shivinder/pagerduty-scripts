@@ -68,11 +68,11 @@ while True:
     # condition to break out of infinite while loop
     if offset < 9900:
         offset+=limit
-    elif incidents_list['more'] == True and offset == 9900:
+    elif offset == 9900:
         # add a flag condition to bypass the offset limit of 100
         reset_offset = 1
     else:
         break
 
 # print some fancy stats on the cli
-print('Total incidents resolved: {}\nTotal pages fetched: {}'.format(str(total_updates),str((offset//limit)+1)))
+print('Total incidents resolved: {}\nTotal pages fetched: {}'.format(str(total_updates),str((offset//limit)+1)))    
