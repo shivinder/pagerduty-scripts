@@ -9,9 +9,9 @@ import requests
 import json
 
 # account definitions
-api_token = 'xxx'
-service_id = 'xxx'
-from_email = 'xxx'
+api_token = ''
+service_id = ''
+from_email = ''
 url = 'https://api.pagerduty.com/incidents'
 header =    {
                 'Accept':'application/vnd.pagerduty+json;version=2',
