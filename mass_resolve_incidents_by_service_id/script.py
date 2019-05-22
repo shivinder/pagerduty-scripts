@@ -3,7 +3,6 @@
 # Just needs the API Token from the Account Owner to run
 # TODO: exception handling when no/invalid api_token is passed
 #       minor tweaks :)
-# curl -X GET --header 'Accept: application/vnd.pagerduty+json;version=2' --header 'Authorization: Token token=_Z-qucZGi_JtwtZem7Ws' 'https://api.pagerduty.com/incidents?service_ids%5B%5D=POVE6WX&time_zone=UTC'
 
 import requests
 import json
