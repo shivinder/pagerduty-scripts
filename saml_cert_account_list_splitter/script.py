@@ -1,5 +1,10 @@
+# dirty little script to help me split a data dump of 3000+ rows in a CSV file
+# to multiple files with 200 rows each. 
+# just works! 
+
 import csv
 
+# open the primary data file here
 with open('data.csv') as data:
     reader = csv.reader(data);
     
@@ -18,7 +23,7 @@ with open('data.csv') as data:
         # change the output file name and insert the initial fieldnames
         # header
         if row_count%200 == 0:
-            file_count+=1
+            file_count = file_count + 1
             filename = 'data_{}.csv'.format(file_count)
             print('Writing data to file: {}'.format(filename))
             with open(filename,'w') as output0:
@@ -28,6 +33,8 @@ with open('data.csv') as data:
         # dump rows to the output file
         with open(filename,'a') as output1:
             writer = csv.writer(output1)
+            # had to add this if condition to insert the fieldnames header to the first
+            # data file only
             if row_count == 1:
                 writer.writerow(fieldnames)
             writer.writerow(row)
