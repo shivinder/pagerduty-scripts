@@ -34,10 +34,11 @@ with open('user_list.csv','w') as output_file:
             total_users += 1
             user_id = user['id']
             user_name = user['name']
+            user_role = user['role']
             user_email = user['email']
 
             # write data to the output csv file
-            csv_file.writerow([user_id,user_name,user_email])
+            csv_file.writerow([user_id,user_name,user_role,user_email])
 
         # condition to break out of infinite while loop
         if users_list['more'] == True:
