@@ -52,6 +52,9 @@ if user_approval == 'y':
                     'From': from_email,
                     'Authorization': 'Token token=' + api_token 
                 }
+    
+    # maintain a count of users added successfully
+    total_added = 0
 
     with open('input.csv','r') as input_file:
         csv_file = csv.reader(input_file)
@@ -60,7 +63,6 @@ if user_approval == 'y':
         # user_name, user_email and user_type
         # unless a user_type column is specified in the csv file, we will assume a user role as default
 
-        total_added = 0
         payload = {}
         
         for row in csv_file:
@@ -74,7 +76,6 @@ if user_approval == 'y':
                 if user_role == '':
                     user_role = default_role
 
-            print('user_name: {}, user_email: {}, user_role: {}'.format(user_name,user_email,user_role))
             # create a payload for the new user
             payload = {
                     'user': {
@@ -88,7 +89,7 @@ if user_approval == 'y':
             response = requests.post(url,headers=header,json=payload)
 
             if response.ok: 
-                print('User - {} - with email - {} - created successfully in the account.'.format(user_name,user_email))
+                print('User - {} - with email - {} - created successfully in the account with the {} role.'.format(user_name,user_email,user_role))
                 total_added+=1
             else:
                 print('Received a response code {} for the request. Details - {}'.format(response.status_code,response.text))
@@ -96,4 +97,4 @@ if user_approval == 'y':
 else:
     print('Quitting script.')
 
-print('Total users supplied - {}\nTotal users added by script - {}\nTotal users skipped - {}\n'.format(total_users,total_added,total_users-total_added))
+print('\n\nTotal users supplied - {}\nTotal users added by script - {}\nTotal users skipped - {}\n'.format(total_users,total_added,total_users-total_added))
