@@ -60,7 +60,9 @@ if user_approval == 'y':
         # user_name, user_email and user_type
         # unless a user_type column is specified in the csv file, we will assume a user role as default
 
+        total_added = 0
         payload = {}
+        
         for row in csv_file:
             user_name = row[0]
             user_email = row[1]
@@ -87,8 +89,11 @@ if user_approval == 'y':
 
             if response.ok: 
                 print('User - {} - with email - {} - created successfully in the account.'.format(user_name,user_email))
+                total_added+=1
             else:
                 print('Received a response code {} for the request. Details - {}'.format(response.status_code,response.text))
 
 else:
     print('Quitting script.')
+
+print('Total users supplied - {}\nTotal users added by script - {}\nTotal users skipped - {}\n'.format(total_users,total_added,total_users-total_added))
