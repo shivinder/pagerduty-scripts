@@ -42,6 +42,9 @@ with open('input.csv','r') as input_file:
 
         total_users+=1
 
+# maintain a count of users added successfully
+total_added = 0
+
 user_approval = input('Proceed with creating {} users on the account (y/n)? '.format(total_users))
 if user_approval == 'y':
     # define headers for the api call
@@ -52,9 +55,6 @@ if user_approval == 'y':
                     'From': from_email,
                     'Authorization': 'Token token=' + api_token 
                 }
-    
-    # maintain a count of users added successfully
-    total_added = 0
 
     with open('input.csv','r') as input_file:
         csv_file = csv.reader(input_file)
