@@ -11,8 +11,8 @@
 import requests
 import csv
 
-api_token = 'sdXDztGLsq_f7za-teR_'
-from_email = 'shivinder@gmail.com'
+api_token = 'xxx'
+from_email = 'xxx'
 default_role = 'user'
 
 # maintain a count
