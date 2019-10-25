@@ -2,14 +2,22 @@
 # fetch a list of all users on the account and save it to a csv file
 
 import requests
+import argparse
 import csv
 
-api_token = 'XXX'
+parser = argparse.ArgumentParser(description='Get a list of all users on a PagerDuty account.')
+parser.add_argument('-k', '--api-key', required=True, type=str, help='REST API key from the account owner.')
+# TODO: column support for csv files
+#parser.add_argument('-c', '--columns', type=str, choices=['id','name','role','email','time_zone','description','job_title','teams'], 
+#                       default=['id','name','email','role'], help='The columns for the report.')
+
+args = parser.parse_args()
+
 url = 'https://api.pagerduty.com/users'
 header =    {
                 'Accept':'application/vnd.pagerduty+json;version=2',
                 'Content-Type': 'application/json', 
-                'Authorization':'Token token=' + api_token 
+                'Authorization':'Token token=' + args.api_key
             }
 
 ## added pagination support
