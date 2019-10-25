@@ -60,7 +60,6 @@ try:
 
             service_id = service['id']
             service_type = service['type']
-
             update_services_url = services_url + '/' + service_id
             payload = {
                 'service': {
