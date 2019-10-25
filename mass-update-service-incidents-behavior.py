@@ -58,9 +58,6 @@ try:
                 print('SKIPPING: Service \"{}\" has incident behavior set to {} already.'.format(service_name,alert_creation))
                 continue
 
-            # update the modified count
-            total_services_mofified += 1
-
             service_id = service['id']
             service_type = service['type']
 
@@ -76,6 +73,8 @@ try:
             # https://api-reference.pagerduty.com/#!/Services/put_services_id
             response = requests.put(update_services_url,headers=header,json=payload)
             if response.ok:
+                 # update the modified count
+                total_services_mofified += 1
                 print('Updated service: \"{}\" incident behavior to {}'.format(service_name,alert_creation))
             else:
                 print('ERROR: Service Name: {} received a {} - {}'.format(service_name,response.status_code,response.text))
