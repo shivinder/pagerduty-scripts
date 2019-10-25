@@ -52,6 +52,7 @@ try:
             total_services += 1
             # skip if service incident behavior is already what the user wants
             if service['alert_creation'] == alert_creation:
+                print('SKIPPING: Service \"{}\" has incident behavior set to {} already.'.format(service['name'],alert_creation))
                 continue
 
             # update the modified count
