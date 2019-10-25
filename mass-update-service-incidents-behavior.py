@@ -16,7 +16,7 @@ elif int(alert_creation) == 2:
 else:
     exit('Exiting script: Not an expected Service Incident Behavior option selected!')
 
-print('The script will now proceed with changing the services incident behavior to {}'.format(alert_creation))
+print('\nThe script will now proceed with changing the services incident behavior to {}\n'.format(alert_creation))
 
 # import the requests lib, define the variables and request headers
 import requests
@@ -30,18 +30,17 @@ header =    {
 
 # get a list of all the services in the account
 # update the service with the incident behavior specified
-# try:
-# PagerDuty Documentation - https://api-reference.pagerduty.com/#!/Services/get_services
-services_url = base_url + '/services'
-# maintain count variables
-total_services = 0
-total_services_mofified = 0
-
-# pagination support - switch to max result limit (as specified on PD documentation website)
-limit = 100
-offset = 0
-
 try:
+    # PagerDuty Documentation - https://api-reference.pagerduty.com/#!/Services/get_services
+    services_url = base_url + '/services'
+    # maintain count variables
+    total_services = 0
+    total_services_mofified = 0
+
+    # pagination support - switch to max result limit (as specified on PD documentation website)
+    limit = 100
+    offset = 0
+
     # fetch all the services list
     while True:
         params = {'limit': limit, 'offset': offset}
@@ -86,4 +85,4 @@ try:
 except:
     print('ERROR: Incorrect API Token!')
 
-print('Total services found on account: {}\nServices modified: {}'.format(total_services,total_services_mofified))
+print('\nTotal services found on account: {}\nServices modified: {}'.format(total_services,total_services_mofified))
