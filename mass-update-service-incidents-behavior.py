@@ -50,9 +50,12 @@ try:
 
         for service in services_list['services']:
             total_services += 1
+            service_name = service['name']
+            service_alert_creation = service['alert_creation']
+
             # skip if service incident behavior is already what the user wants
-            if service['alert_creation'] == alert_creation:
-                print('SKIPPING: Service \"{}\" has incident behavior set to {} already.'.format(service['name'],alert_creation))
+            if service_alert_creation == alert_creation:
+                print('SKIPPING: Service \"{}\" has incident behavior set to {} already.'.format(service_name,alert_creation))
                 continue
 
             # update the modified count
@@ -73,9 +76,9 @@ try:
             # https://api-reference.pagerduty.com/#!/Services/put_services_id
             response = requests.put(update_services_url,headers=header,json=payload)
             if response.ok:
-                print('Updated service: \"{}\" incident behavior to {}'.format(service['name'],alert_creation))
+                print('Updated service: \"{}\" incident behavior to {}'.format(service_name,alert_creation))
             else:
-                print('ERROR: Service Name: {} received a {} - {}'.format(service['name'],response.status_code,response.text))
+                print('ERROR: Service Name: {} received a {} - {}'.format(service_name,response.status_code,response.text))
 
         # condition to break out of infinite while loop
         if services_list['more'] == True:
