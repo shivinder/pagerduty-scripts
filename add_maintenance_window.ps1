@@ -22,6 +22,4 @@ $body = "{
 
         }"
 
-Write-Host $body
-
 $results = Invoke-RestMethod -Uri $url -method POST -ContentType 'application/json' -Body $body -Headers $headers 
