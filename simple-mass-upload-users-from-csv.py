@@ -2,21 +2,31 @@
 
 # csv format
 # user_name,user_email,user_role
+
 # user_role would be optional. a `user` role would be assumed by the script if not specified explicitly
 # this can be changed in the default_role variable definition below
 # role can be admin, limited_user, observer, owner, read_only_user, restricted_access, read_only_limited_user or user
 # account must have the `read_only_users` ability to set a user as a `read_only_user` or a `read_only_limited_user`, 
 # and must have advanced permissions abilities to set a user as `observer` or `restricted_access`.
 
+api_token = input('Please enter the API token for the account: ')
+if api_token == '':
+    exit('An API token is required to run the script!')
+
+from_email = input('Please enter the "From Email" address. This would be used to send out the invitation emails: ')
+if from_email == '':
+    exit('A "From Email" address is required to send out the email invites.')
+
 import requests
 import csv
 
-api_token = 'xxx'
-from_email = 'xxx'
+# ToDo: define various different roles here?
 default_role = 'user'
 
 # maintain a count
 total_users = 0
+
+input('Please ensure that the CSV file name is "input.csv" and it is in the same directory as this script.\nPress any key to begin the import process...\n')
 
 # parse the csv file and display the count and data on screen to get a confirmation from the user
 with open('input.csv','r') as input_file:
@@ -95,6 +105,6 @@ if user_approval == 'y':
                 print('Received a response code {} for the request. Details - {}'.format(response.status_code,response.text))
 
 else:
-    print('Quitting script.')
+    print('You selected not to proceed. Quitting script now. No changes to the account have been made.')
 
 print('\n\nTotal users supplied - {}\nTotal users added by script - {}\nTotal users skipped - {}\n'.format(total_users,total_added,total_users-total_added))
