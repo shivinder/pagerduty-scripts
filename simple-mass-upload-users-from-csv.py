@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
-# csv format
-# user_name,user_email,user_role
+# csv format - user_role & job_title are optional
+# user_name,user_email,user_role,job_title
 
 # user_role would be optional. a `user` role would be assumed by the script if not specified explicitly
 # this can be changed in the default_role variable definition below
@@ -22,6 +22,7 @@ import csv
 
 # ToDo: define various different roles here?
 default_role = 'user'
+default_title = ''
 
 # maintain a count
 total_users = 0
@@ -40,6 +41,7 @@ with open('input.csv','r') as input_file:
         user_name = row[0]
         user_email = row[1]
         
+        # define user_role from CSV else use default values
         try:
             user_role = row[2]
         except:
@@ -48,7 +50,13 @@ with open('input.csv','r') as input_file:
             if user_role == '':
                 user_role = default_role
         
-        print('Will create a new user - {} - having an email - {} - with the {} permissions on the account.'.format(user_name,user_email,user_role))
+        # define job_title from CSV else use default values
+        try:
+            job_title = row[3]
+        finally:
+            job_title = default_title
+
+        print('Will create a new user "{}" with a job title of "{}" having an email "{}" with "{}" permissions.'.format(user_name,job_title,user_email,user_role))
 
         total_users+=1
 
@@ -92,7 +100,8 @@ if user_approval == 'y':
                         'type': 'user',
                         'name': user_name,
                         'email': user_email,
-                        'role': user_role
+                        'role': user_role,
+                        'job_title': job_title
                     }
                 }
             
