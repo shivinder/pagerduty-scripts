@@ -53,7 +53,7 @@ with open('input.csv','r') as input_file:
         # define job_title from CSV else use default values
         try:
             job_title = row[3]
-        finally:
+        except:
             job_title = default_title
 
         print('Will create a new user "{}" with a job title of "{}" having an email "{}" with "{}" permissions.'.format(user_name,job_title,user_email,user_role))
