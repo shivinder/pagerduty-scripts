@@ -34,7 +34,7 @@ pip install -r requirements.txt
 The general syntax of the script is
 
 ```
-./update_user_attributes --api-key <global_api_key> --file <path_to_csv_file>
+./update_user_attributes.py --api-key <global_api_key> --file <path_to_csv_file>
 ```
 
 ## CSV file format
