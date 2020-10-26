@@ -53,12 +53,13 @@ user1@example.com,Telecom Manager
 user2@example.com,Field Officer
 ```
 
-Example to change the `job_title` and the `description` field:
+Example to change the `job_title` and the `description` field. Last row is missing description.
 
 ```
 email,job_title,description
 user1@example.com,Telecom Manager,Manages the Telecom Team
 user2@example.com,Field Officer,Fixes the actual problem in cables
+yser3@example.com,CTO,
 ```
 
 Email addresses can also be changed. You will need to mention the old/exiting email address in the first column, which is a requirement, and the new email address in any subsequent columns, with the same title `email`. Check example below:
