@@ -1,0 +1,50 @@
+{
+    'name': 'Aakash Sharma', 
+    'email': 'aakash.sharma.2@team.telstra.com.invalid', 
+    'time_zone': 'Australia/Sydney', 
+    'color': 'maroon', 
+    'avatar_url': 'https://secure.gravatar.com/avatar/0d5b09d9e2316bac29239bf9490b746a.png?d=mm&r=PG', 
+    'billed': True, 
+    'role': 'limited_user', 
+    'description': None, 
+    'invitation_sent': True, 
+    'job_title': ' ', 
+    'teams': [
+        {
+    ]       'id': 'PI33QRS', 
+            'type': 'team_reference', 
+            'summary': 'eomsys_devops', 
+            'self': 'https://api.pagerduty.com/teams/PI33QRS', 
+            'html_url': 'https://pdt-shivinder-00.pagerduty.com/teams/PI33QRS'}
+    ], 
+    'contact_methods': [
+        {
+            'id': 'P1VCNJL', 
+            'type': 'email_contact_method_reference', 
+            'summary': 'Default', 
+            'self': 'https://api.pagerduty.com/users/PNZ6YSX/contact_methods/P1VCNJL', 
+            'html_url': None}
+    ], 
+    'notification_rules': [
+        {
+            'id': 'P9W63W2', 
+            'type': 'assignment_notification_rule_reference', 
+            'summary': '0 minutes: channel P1VCNJL', 
+            'self': 'https://api.pagerduty.com/users/PNZ6YSX/notification_rules/P9W63W2', 
+            'html_url': None
+        }, 
+        {
+            'id': 'PQ5U48S', 
+            'type': 'assignment_notification_rule_reference', 
+            'summary': '0 minutes: channel P1VCNJL', 
+            'self': 'https://api.pagerduty.com/users/PNZ6YSX/notification_rules/PQ5U48S', 
+            'html_url': None
+        }
+    ], 
+    'coordinated_incidents': [], 
+    'id': 'PNZ6YSX', 
+    'type': 'user', 
+    'summary': 'Aakash Sharma', 
+    'self': 'https://api.pagerduty.com/users/PNZ6YSX', 
+    'html_url': 'https://pdt-shivinder-00.pagerduty.com/users/PNZ6YSX'
+}
