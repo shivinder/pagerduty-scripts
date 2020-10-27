@@ -11,8 +11,14 @@ import json
 import requests
 import argparse
 
-def fetch_all_users():
+def fetch_all_users(api_key):
     users_list = list()
+
+    header = {
+        'accept': "application/vnd.pagerduty+json;version=2",
+        'content-type': "application/json",
+        'authorization': "Token token=" + api_key
+    }
 
     # pagination support - stll using the classic pagination
     limit = 100 # max value mentioned in the PD documentation
@@ -36,9 +42,18 @@ def fetch_all_users():
     
     return users_list
 
-def update_user_attribute(user_id, user_type, user_name, user_email, user_attribute_type, user_attribute_value):
+def update_user_attribute(api_key, user_id, user_type, user_name, user_email, user_attribute_type, user_attribute_value):
+
+    header = {
+            'accept': "application/vnd.pagerduty+json;version=2",
+            'content-type': "application/json",
+            'authorization': "Token token=" + api_key
+    }
+
     # check for job_title. value should be between 1..100
-    if user_attribute_type == 'job_title' and user_attribute_value == '':
+    job_title_empty = False
+    if user_attribute_type == 'job_title' and user_attribute_value.strip() == '':
+        job_title_empty = True
         user_attribute_value = ' '
 
     # required parameters are: type, name, email
@@ -47,11 +62,15 @@ def update_user_attribute(user_id, user_type, user_name, user_email, user_attrib
             'type': user_type,
             'name': user_name,
             'email': user_email,
-            f'{user_attribute_type}': user_attribute_value
+            user_attribute_type: user_attribute_value
         }
     }
 
-    print(f"Updating {user_attribute_type} for {user_name} with the new value of {user_attribute_value}")
+    # a message for the terminal/logs
+    if user_attribute_type == 'job_title' and job_title_empty:
+        print(f"Removed {user_attribute_type} for {user_name}")
+    else:
+        print(f"Updating {user_attribute_type} for {user_name} with the new value of {user_attribute_value}")
     
     requests.put("https://api.pagerduty.com/users/" + user_id, headers=header, json=payload)
 
@@ -68,6 +87,19 @@ def run_custom_dataframe_checks(df):
                 if df_cols not in user_object_attributes:
                     print(f"Column header \"{df_cols}\" not found in valid user object attributes. Column headers should be one of these - {user_object_attributes}")
                     sys.exit()
+
+                # need to check the possible roles in the dataframe - https://support.pagerduty.com/docs/advanced-permissions#roles-in-the-rest-api-and-saml
+                if df_cols == 'role':
+                    invalid_role_found = False
+                    for df_row in df.itertuples():
+                        if df_row.role not in {'admin', 'read_only_user', 'read_only_limited_user', 'user', 'limited_user', 'observer', 'restricted_access', 'owner'}:
+                            invalid_role_found = True
+                            print(f"Invalid role '{df_row.role}' specified for {df_row.email}")
+
+                    if invalid_role_found:
+                        print(f"Please fix the invalid roles found in the csv to continue. No change has been made to the account.")
+                        sys.exit()
+
     else:
         print(f"Number of columns is too less to run the script. Exiting now.")
         sys.exit()
@@ -78,7 +110,7 @@ def main():
     df = run_custom_dataframe_checks(pd.read_csv(args.file_name))
 
     # fetch a list of all users in the account 
-    users_list = fetch_all_users()
+    users_list = fetch_all_users(args.api_key)
 
     for df_row in df.itertuples():
         user_found = False
@@ -87,7 +119,7 @@ def main():
             if df_row.email == user['email']:
                 user_found = True
                 for df_col_title in df.columns:
-                    update_user_attribute(user['id'], user['type'], user['name'], user['email'], df_col_title, getattr(df_row, df_col_title) )
+                    update_user_attribute(args.api_key, user['id'], user['type'], user['name'], user['email'], df_col_title, getattr(df_row, df_col_title) )
 
         if not user_found:
             print(f"Skipping user with email address \"{df_row.email}\" not found in the account")
@@ -99,12 +131,5 @@ if __name__ == "__main__":
     parser.add_argument('-a', '--api-key', required=True, help='global api key from the account')
     parser.add_argument('-f', '--file-name', required=True, help='path of the csv file to be parsed')
     args = parser.parse_args()
-
-    # define the generic header to be used in all api requests
-    header = {
-            'accept': "application/vnd.pagerduty+json;version=2",
-            'content-type': "application/json",
-            'authorization': "Token token=" + args.api_key
-    }
 
     main()
