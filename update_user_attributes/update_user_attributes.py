@@ -6,13 +6,14 @@
 # the columns should have the headers to identify the column values
 
 import pandas as pd
+import numpy as np
 import sys
 import json
 import requests
 import argparse
 
 def fetch_all_users(api_key):
-    users_list = list()
+    users_list = []
 
     header = {
         'accept': "application/vnd.pagerduty+json;version=2",
@@ -43,7 +44,6 @@ def fetch_all_users(api_key):
     return users_list
 
 def update_user_attribute(api_key, user_id, user_type, user_name, user_email, user_attribute_type, user_attribute_value):
-
     header = {
             'accept': "application/vnd.pagerduty+json;version=2",
             'content-type': "application/json",
@@ -92,7 +92,7 @@ def run_custom_dataframe_checks(df):
                 if df_cols == 'role':
                     invalid_role_found = False
                     for df_row in df.itertuples():
-                        if df_row.role not in {'admin', 'read_only_user', 'read_only_limited_user', 'user', 'limited_user', 'observer', 'restricted_access', 'owner'}:
+                        if df_row.role not in {'admin', 'read_only_user', 'read_only_limited_user', 'user', 'limited_user', 'observer', 'restricted_access', 'owner', np.nan}:
                             invalid_role_found = True
                             print(f"Invalid role '{df_row.role}' specified for {df_row.email}")
 
@@ -119,7 +119,11 @@ def main():
             if df_row.email == user['email']:
                 user_found = True
                 for df_col_title in df.columns:
-                    update_user_attribute(args.api_key, user['id'], user['type'], user['name'], user['email'], df_col_title, getattr(df_row, df_col_title) )
+                    # check for nan values. nan values mean the field has to be skipped
+                    if not (np.nan == getattr(df_row, df_col_title)):
+                        update_user_attribute(args.api_key, user['id'], user['type'], user['name'], user['email'], df_col_title, getattr(df_row, df_col_title) )
+                    else:
+                        print(f"Empty attribute {df_col_title} skipped for user {df_row.email}")
 
         if not user_found:
             print(f"Skipping user with email address \"{df_row.email}\" not found in the account")
