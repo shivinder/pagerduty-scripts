@@ -5,6 +5,11 @@
 # the script searches the object with the user email address and proceeds to modify the attributes specified in the next column
 # the columns should have the headers to identify the column values
 
+import pandas as pd
+import sys
+import json
+import requests
+
 def fetch_all_users():
     users_list = list()
 
@@ -83,7 +88,6 @@ def run_custom_dataframe_checks(df):
     return df
 
 def main():
-    import pandas as pd
     df = run_custom_dataframe_checks(pd.read_csv(args.file_name))
 
     # fetch a list of all users in the account 
@@ -109,9 +113,5 @@ if __name__ == "__main__":
     parser.add_argument('-a', '--api-key', required=True, help='global api key from the account')
     parser.add_argument('-f', '--file-name', required=True, help='path of the csv file to be parsed')
     args = parser.parse_args()
-
-    import sys
-    import json
-    import requests
 
     main()
