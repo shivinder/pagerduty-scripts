@@ -9,6 +9,7 @@ import pandas as pd
 import sys
 import json
 import requests
+import argparse
 
 def fetch_all_users():
     users_list = list()
@@ -106,7 +107,6 @@ def main():
             print(f"Skipping user with email address \"{df_row.email}\" not found in the account")
 
 if __name__ == "__main__":
-    import argparse
     # parse the command line arguments
     parser = argparse.ArgumentParser(description='Modify user object attributes based on the column headers supplied in the csv file. \
         The script supports changing the name, email, time_zone, role, description, job_title.')
