@@ -11,7 +11,14 @@ import json
 import requests
 import argparse
 
-def fetch_all_users():
+# define the generic header to be used in all api requests
+header = {
+        'accept': "application/vnd.pagerduty+json;version=2",
+        'content-type': "application/json",
+        'authorization': "Token token=" + args.api_key
+}
+
+def fetch_all_users(api_key):
     users_list = list()
 
     # pagination support - stll using the classic pagination
@@ -21,13 +28,6 @@ def fetch_all_users():
     # fetch all the users from account
     more = True
     while more:
-        # define the generic header to be used in all api requests
-        header = {
-                'accept': "application/vnd.pagerduty+json;version=2",
-                'content-type': "application/json",
-                'authorization': "Token token=" + args.api_key
-        }
-
         querystring = {
             'limit': limit,
             'offset': offset,
@@ -44,13 +44,6 @@ def fetch_all_users():
     return users_list
 
 def update_user_attribute(user_id, user_type, user_name, user_email, user_attribute_type, user_attribute_value):
-    # define the generic header to be used in all api requests
-    header = {
-            'accept': "application/vnd.pagerduty+json;version=2",
-            'content-type': "application/json",
-            'authorization': "Token token=" + args.api_key
-    }
-
     # check for job_title. value should be between 1..100
     if user_attribute_type == 'job_title' and user_attribute_value == '':
         user_attribute_value = ' '
@@ -92,7 +85,7 @@ def main():
     df = run_custom_dataframe_checks(pd.read_csv(args.file_name))
 
     # fetch a list of all users in the account 
-    users_list = fetch_all_users()
+    users_list = fetch_all_users(args.api_key)
 
     for df_row in df.itertuples():
         user_found = False
