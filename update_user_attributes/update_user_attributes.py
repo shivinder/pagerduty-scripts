@@ -11,14 +11,7 @@ import json
 import requests
 import argparse
 
-# define the generic header to be used in all api requests
-header = {
-        'accept': "application/vnd.pagerduty+json;version=2",
-        'content-type': "application/json",
-        'authorization': "Token token=" + args.api_key
-}
-
-def fetch_all_users(api_key):
+def fetch_all_users():
     users_list = list()
 
     # pagination support - stll using the classic pagination
@@ -85,7 +78,7 @@ def main():
     df = run_custom_dataframe_checks(pd.read_csv(args.file_name))
 
     # fetch a list of all users in the account 
-    users_list = fetch_all_users(args.api_key)
+    users_list = fetch_all_users()
 
     for df_row in df.itertuples():
         user_found = False
@@ -106,5 +99,12 @@ if __name__ == "__main__":
     parser.add_argument('-a', '--api-key', required=True, help='global api key from the account')
     parser.add_argument('-f', '--file-name', required=True, help='path of the csv file to be parsed')
     args = parser.parse_args()
+
+    # define the generic header to be used in all api requests
+    header = {
+            'accept': "application/vnd.pagerduty+json;version=2",
+            'content-type': "application/json",
+            'authorization': "Token token=" + args.api_key
+    }
 
     main()
