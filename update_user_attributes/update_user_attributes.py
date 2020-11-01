@@ -70,8 +70,8 @@ def update_user_attribute(api_key, user_id, user_type, user_name, user_email, us
     if user_attribute_type == 'job_title' and job_title_empty:
         print(f"Removed {user_attribute_type} for {user_name}")
     else:
-        print(f"Updating {user_attribute_type} for {user_name} with the new value of {user_attribute_value}")
-    
+        print(f"Updating user {user_name} with the new {user_attribute_type} of {user_attribute_value}")
+
     requests.put("https://api.pagerduty.com/users/" + user_id, headers=header, json=payload)
 
 def run_custom_dataframe_checks(df):
@@ -81,7 +81,7 @@ def run_custom_dataframe_checks(df):
             print(f"The first header in the csv file must be email. Exiting now.")
             sys.exit()
         else:
-            # list of editable user object attributes
+            # list of editable user object attributes (supported by this script)
             user_object_attributes = {'name', 'email', 'time_zone', 'role', 'description', 'job_title'}
             for df_cols in df.columns:
                 if df_cols not in user_object_attributes:
@@ -119,11 +119,22 @@ def main():
             if df_row.email == user['email']:
                 user_found = True
                 for df_col_title in df.columns:
+                    # debug: 
+                    # print(f"DEBUG: User email: {df_row.email}")
+                    # print(f"DEBUG: {df_col_title}: {getattr(df_row, df_col_title)}")
+
                     # check for nan values. nan values mean the field has to be skipped
-                    if not (np.nan == getattr(df_row, df_col_title)):
-                        update_user_attribute(args.api_key, user['id'], user['type'], user['name'], user['email'], df_col_title, getattr(df_row, df_col_title) )
-                    else:
-                        print(f"Empty attribute {df_col_title} skipped for user {df_row.email}")
+                    user_attribute_value = None
+                    try:
+                        user_attribute_value = getattr(df_row, df_col_title)
+                        if np.isnan(user_attribute_value):
+                            print(f"Empty attribute '{df_col_title}' skipped for user {df_row.email}")
+                    except TypeError:
+                        # check for duplicate values supplied
+                        if user[df_col_title] == user_attribute_value: # we need to skip the update_user_attribute call completely
+                            print(f"User {user['name']} already has the attribute '{df_col_title}' set to '{user_attribute_value}'. Nothing to do here. ")
+                        else:
+                            update_user_attribute(args.api_key, user['id'], user['type'], user['name'], user['email'], df_col_title, user_attribute_value )
 
         if not user_found:
             print(f"Skipping user with email address \"{df_row.email}\" not found in the account")
