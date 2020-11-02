@@ -20,7 +20,7 @@ python3 -m venv env
 Next you need to switch to this new virtual environment
 
 ```
-. .env/bin/activate
+. env/bin/activate
 ```
 
 Now we need to install the required libraries to run this script. The list of libraries is in the accompanying file `requirements.txt` and you may install them in one go, if you have access to `pip` using
