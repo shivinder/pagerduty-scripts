@@ -5,8 +5,8 @@
 # the script searches the object with the user email address and proceeds to modify the attributes specified in the next column
 # the columns should have the headers to identify the column values
 
-import pandas as pd
-import numpy as np
+import pandas as pd # required to work on the csv files
+import numpy as np  # imported just to do the np.nan comparisions
 import sys
 import json
 import requests
