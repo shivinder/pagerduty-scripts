@@ -77,5 +77,4 @@ user2@example.com,new_user2@example.com
 
 ## Pending
 
-- check if the role supplied is a valid role, exit if an invalid role is found with no changes to the account
 - changes to the time zone part has no error checks. Will fail if incorrect time zone data is supplied
