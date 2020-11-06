@@ -77,4 +77,6 @@ user2@example.com,new_user2@example.com
 
 ## Pending
 
+- In the function `fetch_all_users` we could fetch all the users to a Pandas DataFrame instead of the lists being used currently
 - changes to the time zone part has no error checks. Will fail if incorrect time zone data is supplied
+- The function `update_user_attribute` can update all the attributes in a single go
