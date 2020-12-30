@@ -7,18 +7,18 @@ import requests
 import json
 import csv
 
-from requests.models import parse_header_links
-
-def get_incidents(session):
+def get_incidents(session, service_ids=False):
     # handle pagination - incidents endpoint does not support cursor based pagination. using classic pagination
     # more details about pagination here - https://developer.pagerduty.com/docs/rest-api-v2/pagination
     limit, offset, more, total = 100, 0, True, False
 
+    if service_ids:
+        service_ids = service_ids.split(",")
+
     # define the parameters for the requests get call
-    querystring = {"total": total, "limit": limit, "offset": offset, "time_zone": "UTC"}
+    querystring = {"service_ids[]": service_ids, "total": total, "limit": limit, "offset": offset, "time_zone": "UTC"}
 
     incidents_list = []
-
     try:
         while more:
             incidents_list_batch = json.loads(session.get('https://api.pagerduty.com/incidents', params=querystring).text)
@@ -59,13 +59,14 @@ def generate_csv_report(incidents_list):
         csv_file.writerows(incidents_data)
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Generate the incidents report.')
-    parser.add_argument('--api-key', '-k', type=str, required=True, help='Global API key of your account')
+    parser = argparse.ArgumentParser(description='Generate the incidents report.', epilog='Find more details in the accompanying README.md')
+    parser.add_argument('--api-key', '-k', type=str, required=True, help='Global API key of your PagerDuty account')
+    parser.add_argument('--service-ids', '-s', type=str, required=False, help='Optionally you may supply a Service ID to generate a report for the supplied Service ID. You may supply more than one Service ID associated with your account seperated by commas, example PXXXXX1,PXXXXX2')
     args = parser.parse_args()
 
     with requests.Session() as session:
         session.headers.update({"Accept": "application/vnd.pagerduty+json;version=2", "Content-Type": "application/json", "Authorization": "Token token={}".format(args.api_key)})
-        incidents_list = get_incidents(session)
+        incidents_list = get_incidents(session, args.service_ids)
 
     if incidents_list:
         generate_csv_report(incidents_list)
