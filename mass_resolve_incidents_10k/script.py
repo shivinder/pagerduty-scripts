@@ -4,8 +4,50 @@
 
 import requests
 import argparse
+import json
 
-def get_incidents_list():
+def get_incidents_list(pd_session, st, sa, sid, tid):
+    if args.debug:
+        print(f"DEBUG: get_incidents_list: pd_session: {pd_session}, st: {st}, sa: {sa}, sid: {sid}, tid: {tid}")
+
+    # maintain a count of all the incidents
+    total_incidents_count = 0
+
+    # construct the basic query string using the max number of limits and offset values to get the max number of results in one request
+    querystring = {"limit":"100", "offset":"0", "more":"true", "total":"true", "time_zone":"UTC"}
+
+    if args.debug:
+        print(f"DEBUG: get_incidents_list: basic query string: {querystring}")
+
+    # modify the query string based on the args passed to the script
+    if st is not None:
+        querystring['statuses[]'] = 'triggered'
+
+    if sa is not None:
+        if st is None:
+            querystring['statuses[]'] = 'acknowledged'
+        else:
+            querystring['statuses[]'] = 'triggered,acknowledged'
+
+    if sid is not None:
+        querystring['service_ids[]'] = sid
+
+    if tid is not None:
+        querystring['team_ids[]'] = tid
+
+    if args.debug:
+        print(f"DEBUG: get_incidents_list: modified and final query string: {querystring}")
+
+    # time to fetch the incidents!
+    #while querystring['more'] == 'true':
+    response = pd_session.get('https://api.pagerduty.com/incidents', params=querystring).json()
+    print(type(response))
+
+    if args.debug:
+        print(f"DEBUG: get_incidents_list: response: total: {response['total']}")
+
+
+# test data. to be removed later
     return [200,300]
 
 def resolve_incident(incident_id):
@@ -42,7 +84,7 @@ if __name__ == '__main__':
     if args.debug:
         print(f"DEBUG: main: pd_session object: {pd_session.headers}")
 
-    incidents_list = get_incidents_list()
+    incidents_list = get_incidents_list(pd_session, args.status_triggered, args.status_acknowledged, args.service_id, args.team_id)
     incidents_count = len(incidents_list)
 
     if args.debug:
