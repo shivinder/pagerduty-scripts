@@ -14,7 +14,7 @@ def get_incidents_list(pd_session, st, sa, sid, tid):
     total_incidents_count = 0
 
     # construct the basic query string using the max number of limits and offset values to get the max number of results in one request
-    querystring = {"limit":"100", "offset":"0", "more":"true", "total":"true", "time_zone":"UTC"}
+    querystring = {"limit":"100", "offset":"0", "more":"True", "total":"true", "time_zone":"UTC"}
 
     if args.debug:
         print(f"DEBUG: get_incidents_list: basic query string: {querystring}")
@@ -39,16 +39,32 @@ def get_incidents_list(pd_session, st, sa, sid, tid):
         print(f"DEBUG: get_incidents_list: modified and final query string: {querystring}")
 
     # time to fetch the incidents!
-    #while querystring['more'] == 'true':
-    response = pd_session.get('https://api.pagerduty.com/incidents', params=querystring).json()
-    print(type(response))
+    incidents_list = []
 
-    if args.debug:
-        print(f"DEBUG: get_incidents_list: response: total: {response['total']}")
+    while querystring['more'] == 'True':
 
+        if args.debug:
+            print("DEBUG: get_incidents_list: stepping in the while loop to fetch the incidents")
 
-# test data. to be removed later
-    return [200,300]
+        response = pd_session.get('https://api.pagerduty.com/incidents', params=querystring).json()
+        
+        if args.debug:
+            # print(f"DEBUG: get_incidents_list: response content: {response}")
+            print(f"DEBUG: get_incidents_list response: total: {response['total']}")
+
+        if response['total'] > 0:
+            # add the incident id's to the list
+            for incident in response['incidents']:
+                
+                if args.debug:
+                    print(f"DEBUG: get_incidents_list: while loop: incident details: {incident}")
+
+                incidents_list.append(incident['id'])
+
+        querystring['more'] = response['more']
+
+    # test data. to be removed later
+    return incidents_list
 
 def resolve_incident(incident_id):
     if args.debug:
